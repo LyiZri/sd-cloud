@@ -1,0 +1,71 @@
+.backImage {
+  position: absolute;
+  right: -53px;
+  bottom: 0;
+}
+
+.rotateTable {
+  position: relative;
+}
+
+.rotateBox {
+  position: absolute;
+  transform: rotate(15deg);
+}
+
+.home {
+  display: flex;
+
+  .leftContext {
+    width: 730px;
+
+    >.title {
+      font-size: 18px;
+      color: #ffffff;
+    }
+
+    >.intro {
+      margin-top: 24px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+
+      .details {
+        margin-left: 12px;
+        font-size: 14px;
+        color: #00b3c4;
+      }
+    }
+
+    .join {
+      flex-shrink: 0;
+      display: inline-block;
+      padding: 14px 30px;
+      font-size: 14px;
+      color: #00b3c4;
+    }
+
+
+   
+  }
+
+  .rightContext {
+    width: 350px;
+    height: 100%;
+    margin-left: 40px;
+    flex-shrink: 0;
+  }
+
+  .disabledCard {
+    height: 146px;
+    background: #2a2d33;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
