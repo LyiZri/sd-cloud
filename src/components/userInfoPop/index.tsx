@@ -208,26 +208,6 @@ const Page: React.FC<Props> = (props) => {
                 </div>
                 <div className={styles.indentityBox}>
                   <div className={styles.identityBoxTitle}>
-                    <h3>Version</h3>
-                    <div
-                      className={styles.indentityBoxIcon}
-                      onClick={() => {
-                        if (indentityContentIndex == 3) {
-                          setIndentityContentIndex(0);
-                        } else {
-                          setIndentityContentIndex(3);
-                        }
-                      }}
-                    >
-                      <Iconfont type="icon-xia"></Iconfont>
-                    </div>
-                  </div>
-                  {indentityContentIndex == 3 && (
-                    <div className={styles.indentityContent}>0.2.1</div>
-                  )}
-                </div>
-                <div className={styles.indentityBox}>
-                  <div className={styles.identityBoxTitle}>
                     <h3>Custom Node</h3>
                     <div
                       className={styles.indentityBoxIcon}
@@ -253,6 +233,26 @@ const Page: React.FC<Props> = (props) => {
                         Custom Node
                       </Button>
                     </div>
+                  )}
+                </div>
+                <div className={styles.indentityBox}>
+                  <div className={styles.identityBoxTitle}>
+                    <h3>Version</h3>
+                    <div
+                      className={styles.indentityBoxIcon}
+                      onClick={() => {
+                        if (indentityContentIndex == 3) {
+                          setIndentityContentIndex(0);
+                        } else {
+                          setIndentityContentIndex(3);
+                        }
+                      }}
+                    >
+                      <Iconfont type="icon-xia"></Iconfont>
+                    </div>
+                  </div>
+                  {indentityContentIndex == 3 && (
+                    <div className={styles.indentityContent}>0.2.1</div>
                   )}
                 </div>
               </div>
