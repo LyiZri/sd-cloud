@@ -15,14 +15,16 @@ const Page: React.FC<Props> = (props) => {
     <div className={styles.Web3Item} style={{ height: windowHeight }}>
       <div className={styles.Intro}>
         <div className={styles.titleBox}>
-          Web3<span> Storage</span>
-        </div>
-        <div className={styles.introContext}>
-          <p>The easiest way to store data on the decentralized web.</p>
-          <p>SDC offers a simple web3 storage interface that allows users and developers to take advantage of the vast array of decentralized storage provided by the Filecoin network.</p>
-          <p>The unique economics of Filecoin allow SDCloud to be completely free to use, while still ensuring that storage providers have a strong incentive to preserve user data for the long term.</p>
+          Web3<div> Storage</div>
         </div>
       </div>
+        <div className={styles.firstIntro}>
+          <p >The <span>Easiest Way</span>  to store data on the <span>Decentralized Web</span> .</p>
+          <p><span>SDCloud</span> offers a simple <span>Web3 Storage</span>  interface that allows users and developers to take advantage of the vast array of decentralized storage provided by the <span>Filecoin Network</span> .</p>
+        </div>
+        <div className={styles.secondIntro}>
+          <p>The unique economics of <span>Filecoin</span> allow <span>SDCloud</span>  to be completely free to use, while still ensuring that storage providers have a <span>Strong Incentive</span>  to preserve user data for the long term.</p>
+        </div>
       <div className="container">
         <svg
           version="1.1"

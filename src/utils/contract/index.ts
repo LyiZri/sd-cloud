@@ -110,7 +110,8 @@ obj.init = async () => {
           'save_account_image',
           'file_share',
           'file_rename',
-          'save_account_name'
+          'save_account_name',
+          'save_account_custom_node'
         ],
         sender: obj.walletAccount.getAccountId(),
       },

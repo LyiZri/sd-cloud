@@ -3,11 +3,12 @@ import Iconfont from '@/components/Iconfont';
 import { Upload, message, Spin, Modal, Menu, Dropdown, Button, Form, Input } from 'antd';
 import { Channel } from '@/utils/cluster/fileImport';
 import Card from '../Card';
+import { history } from 'umi';
 import { connect } from 'dva';
 import { Cluster } from '@nftstorage/ipfs-cluster';
 import { IPFS_URL_ADD, CLUSTER_URL_PINS } from '@/utils/cluster/config';
 import Contract, { client } from '@/utils/contract';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cidToSid } from '@/utils/common';
 import { create } from 'ipfs-http-client';
 import { checkFileType } from '@/utils/files/sylEncryption';
@@ -28,10 +29,19 @@ const ImportFiles: React.FC<Props> = (props: any) => {
   const [inputNodeType, setInputNodeType] = useState(0);
   const [isShowAddNodeModal, setIsShowAddNodeModal] = useState(false);
   const [addNodeConfirmLoading, setAddNodeConfirmLoading] = useState(false);
-  const [addNodeFormMessage,setAddNodeFormMessage] = useState({
-    nodeName:'',
-    nodeAddress:''
-  })
+  const [addNodeFormMessage, setAddNodeFormMessage] = useState({
+    node_name: '',
+    custom_node: '',
+  });
+  useEffect(() => {
+    (async () => {
+      const data = JSON.parse(await contract.view_account({ did: `did:near:${getID}` }));
+      setAddNodeFormMessage({
+        node_name: data.account.account_custom_node_name,
+        custom_node: data.account.account_custom_node,
+      });
+    })();
+  }, []);
   let { contract, getID } = Contract;
   let filesInput: any;
 
@@ -73,16 +83,25 @@ const ImportFiles: React.FC<Props> = (props: any) => {
         },
       });
       let cid = '';
-      if (inputNodeType == 1) {
+      let network_id = 0
+      if (inputNodeType == 0) {
         cid = await client.put(files, { onStoredChunk });
         console.log(cid);
-      } else if (inputNodeType == 2) {
+        network_id = 0
+      } else if (inputNodeType == 1) {
         const IPFSClient = create({ url: IPFS_URL_ADD });
         const cluster = new Cluster(CLUSTER_URL_PINS);
         const IPFSCid = await IPFSClient.add({ content: files[0] });
         cid = IPFSCid.cid.toString();
+        network_id = 1
+      } else if (inputNodeType == 2) {
+        
+        const IPFSClient = create({ url: addNodeFormMessage.custom_node });
+        const cluster = new Cluster(CLUSTER_URL_PINS);
+        const IPFSCid = await IPFSClient.add({ content: files[0] });
+        cid = IPFSCid.cid.toString();
+        network_id = 2
       }
-
       let type = [];
       if (props.floderType === 'newFloder') {
         type = [checkFileType(files[0].name), props.title];
@@ -95,6 +114,7 @@ const ImportFiles: React.FC<Props> = (props: any) => {
         file_size: files[0].size,
         file_type: files[0].type,
         file_owner_folder: type,
+        network_id,
       };
 
       props.dispatch({
@@ -142,35 +162,36 @@ const ImportFiles: React.FC<Props> = (props: any) => {
       });
     }
   };
-  const addNodeMessageOK = async ()=>{
-    setAddNodeConfirmLoading(true)
-    setAddNodeConfirmLoading(false)
-    setIsShowAddNodeModal(false)
-    setAddNodeFormMessage({
-      nodeName:'',
-      nodeAddress:''
-    })
-  }
   const menu = (
     <Menu>
+      <Menu.Item
+        onClick={() => {
+          setInputNodeType(0);
+          filesInput.click();
+        }}
+      >
+        SD-Cloud Node
+      </Menu.Item>
       <Menu.Item
         onClick={() => {
           setInputNodeType(1);
           filesInput.click();
         }}
       >
-        WEB3 Node
-      </Menu.Item>
-      <Menu.Item
-        onClick={() => {
-          setInputNodeType(2);
-          filesInput.click();
-        }}
-      >
         IPFS Node
       </Menu.Item>
-      <Menu.Item onClick={() => setIsShowAddNodeModal(true)}>
-        Add node{' '}
+      {addNodeFormMessage.custom_node !== '' && (
+        <Menu.Item
+          onClick={() => {
+            setInputNodeType(2);
+            filesInput.click();
+          }}
+        >
+          {addNodeFormMessage.node_name}
+        </Menu.Item>
+      )}
+      <Menu.Item onClick={() => history.push('customNode')}>
+        Custom node{' '}
         <Iconfont type="icon-daoruwenjian1" size={16} color="rgba(255, 255, 255, 0.8)"></Iconfont>
       </Menu.Item>
     </Menu>
@@ -183,35 +204,6 @@ const ImportFiles: React.FC<Props> = (props: any) => {
       defaultBorder={false}
     >
       {/* <Upload {...uploadProps} maxCount={1} showUploadList={false} onChange={change}> */}
-      <Modal
-        title="Add user-defined Node"
-        visible={isShowAddNodeModal}
-        onOk={addNodeMessageOK}
-        onCancel={() => setIsShowAddNodeModal(false)}
-        confirmLoading={addNodeConfirmLoading}
-        cancelText='Cancel'
-        okText='OK'
-      >
-        <div className={styles.addMessageModal}>
-         <div className={styles.addMessageModalList}>
-            <span>Node Name:</span>
-            <input onChange={(e)=>{
-              setAddNodeFormMessage({
-                ...addNodeFormMessage,
-                nodeName:e.target.value
-              })
-            }} type="text" />
-         </div>
-         <div className={styles.addMessageModalList}>
-            <span>Node Address:</span>
-            <input type="text" onChange={(e)=>setAddNodeFormMessage({
-              ...addNodeFormMessage,
-              nodeAddress:e.target.value
-            })} />
-         </div>
-         
-        </div>
-      </Modal>
       <Dropdown overlay={menu} placement="bottomLeft" trigger={['click']}>
         <Button>
           <Iconfont type="icon-daoruwenjian1" size={16} color="rgba(255, 255, 255, 0.8)"></Iconfont>

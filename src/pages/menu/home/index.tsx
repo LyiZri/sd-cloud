@@ -88,7 +88,7 @@ const Page: React.FC<Props> = (props) => {
       <IPFSItem cardList={cardList}>
       </IPFSItem>
       <Web3Item/>
-      <SettingItem/>
+      {/* <SettingItem/> */}
      </Carousel>
     </>
   );
